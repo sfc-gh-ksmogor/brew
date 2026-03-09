@@ -326,14 +326,14 @@ jobs:
         include:
           - name: test-bot (Linux arm64)
             runs-on: ubuntu-24.04-arm
-            container: ghcr.io/homebrew/ubuntu24.04:latest
+            container: ghcr.io/homebrew/brew:latest
           - name: test-bot (Linux x86_64)
             runs-on: ubuntu-latest
             container: ghcr.io/homebrew/brew:main
-          # Use Debian Old Stable for testing Homebrew's glibc support.
+          # Use older Ubuntu for testing Homebrew's glibc and gcc support.
           - name: test-bot (Linux Homebrew glibc)
             runs-on: ubuntu-latest
-            container: debian:oldstable
+            container: ubuntu:22.04
           - name: test-bot (macOS x86_64)
             runs-on: macos-15-intel
           - name: test-bot (macOS arm64)
@@ -344,7 +344,7 @@ jobs:
       - name: Install Homebrew and Homebrew's dependencies
         # All other images are built from our Homebrew Dockerfile.
         # This is the only one that needs to be set up manually.
-        if: matrix.container == 'debian:oldstable'
+        if: matrix.container == 'ubuntu:22.04'
         run: |
           # Slimmed down version from the Homebrew Dockerfile
           apt-get update
