@@ -20,17 +20,15 @@ export HOMEBREW_DEVELOPER=1
 export HOMEBREW_EXPERIMENTAL_RUST_FRONTEND=1
 ```
 
-From the repository root, before running `rake`, add Homebrew's portable Ruby to
-`PATH` and install `rake` there if needed:
+From the repository root, add Homebrew's portable Ruby to `PATH` and install
+the bundle before running `rake`:
 
 ```bash
 portable_ruby_bindir="$PWD/Library/Homebrew/vendor/portable-ruby/current/bin"
 [[ -x "${portable_ruby_bindir}/ruby" ]] || ./bin/brew vendor-install ruby
-if [[ ! -x "${portable_ruby_bindir}/rake" ]]
-then
-  "${portable_ruby_bindir}/gem" install rake --no-document
-fi
 export PATH="${portable_ruby_bindir}:${PATH}"
+cd Library/Homebrew/rust/brew-rs
+bundle install
 ```
 
 ## Build
@@ -79,8 +77,7 @@ The Rust frontend tests now live in the `brew-rs` crate and the dedicated
 The `benchmark` task compares the Ruby and Rust frontends with `hyperfine` for
 the commands currently gated through `brew-rs`.
 
-`rake` should be run with Homebrew's portable Ruby bin directory at the front
-of `PATH`. The benchmark prints the normal `hyperfine` output along with each
+The benchmark prints the normal `hyperfine` output along with each
 command's stdout/stderr. Right now it only benchmarks commands with meaningful
 Rust implementations: `search` and `list <installed formula>`.
 
@@ -91,8 +88,7 @@ vendored binary is missing, the benchmark task builds it first with
 
 ```bash
 brew install hyperfine
-cd Library/Homebrew/rust/brew-rs
-rake benchmark
+bundle exec rake benchmark
 ```
 
 ## Tier 1 Smoke Test

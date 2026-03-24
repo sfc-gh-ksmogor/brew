@@ -63,7 +63,9 @@ jobs:
       - name: Set up portable Ruby
         uses: Homebrew/actions/setup-ruby@b7f2e4e4cd0fc6580ebf3ecee0d10ac27bc02ce6 # main
         with:
+          bundler-cache: true
           portable-ruby: true
+          working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/Homebrew/rust/brew-rs
 
       - name: Build brew-rs
         run: brew vendor-install brew-rs
@@ -82,7 +84,7 @@ jobs:
 
       - name: Benchmark brew-rs
         working-directory: ${{ steps.set-up-homebrew.outputs.repository-path }}/Library/Homebrew/rust/brew-rs
-        run: rake benchmark:check
+        run: bundle exec rake benchmark:check
 
       - name: Upload brew-rs benchmark results
         if: always()
